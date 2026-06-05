@@ -62,12 +62,40 @@ const App = {
         }
     },
 
+    startCountdowns() {
+        document.querySelectorAll('.countdown-timer').forEach(el => {
+            const dateStr = el.dataset.date;
+            const targetDate = new Date(dateStr + 'T00:00:00');
+
+            const update = () => {
+                const now = new Date();
+                const diff = targetDate - now;
+
+                if (diff <= 0) {
+                    el.textContent = '比赛已开始！';
+                    return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+                el.textContent = `距开赛：${days}天 ${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            };
+
+            update();
+            setInterval(update, 1000);
+        });
+    },
+
     async loadEventsData() {
         const text = await DataLoader.loadCSV('sample_events.csv');
         if (text) {
             const events = CSVParser.parse(text);
             const container = document.getElementById('events-list');
             container.innerHTML = events.map(e => UI.renderEventCard(e)).join('');
+            this.startCountdowns();
         }
     },
 

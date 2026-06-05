@@ -1,8 +1,10 @@
 const UI = {
     renderEventCard(event) {
+        const countdownId = `countdown-${event.期次}`;
         return `
             <div class="card">
                 <h3>${event.名称 || '未命名赛事'}</h3>
+                <p class="countdown-timer" id="${countdownId}" data-date="${event.日期}">加载中...</p>
                 <p><strong>期次：</strong>${event.期次}</p>
                 <p><strong>日期：</strong>${event.日期}</p>
                 <p><strong>地点：</strong>${event.地点}</p>
