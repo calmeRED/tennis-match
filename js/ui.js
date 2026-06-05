@@ -17,11 +17,11 @@ const UI = {
     },
 
     renderChampionCard(champion) {
-        const imagePath = `champions/${champion.期次}-${champion.场次}.jpg`;
-        const txtPath = `champions/${champion.期次}-${champion.场次}.txt`;
+        const period = champion.期次;
+        const match = champion.场次;
         return `
             <div class="card champion-card">
-                <img src="${imagePath}" alt="第${champion.期次}期冠军" style="max-width:100%;border-radius:8px;" onerror="this.style.display='none'">
+                <img src="champions/${period}-${match}.jpg" alt="第${period}期冠军" style="max-width:100%;border-radius:8px;" onerror="this.src='champions/${period}-${match}.png'">
                 <h3>🏆 ${champion.选手姓名}</h3>
                 <p><strong>日期：</strong>${champion.比赛日期}</p>
                 ${champion.感言 ? `<p><strong>🏆 冠军说</strong><br>${champion.感言}</p>` : ''}
