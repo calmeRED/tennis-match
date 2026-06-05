@@ -95,6 +95,7 @@ const App = {
         const text = await DataLoader.loadCSV('sample_events.csv');
         if (text) {
             const events = CSVParser.parse(text);
+            events.sort((a, b) => new Date(b.日期) - new Date(a.日期));
             const container = document.getElementById('events-list');
             container.innerHTML = events.map(e => UI.renderEventCard(e)).join('');
             this.startCountdowns();
@@ -134,9 +135,11 @@ const App = {
                 场次: m.场次,
                 组别: m.组别,
                 比赛日期: m.比赛日期,
-                感言: 感言
+                               感言: 感言
             });
         }
+
+        champions.sort((a, b) => new Date(b.比赛日期) - new Date(a.比赛日期));
 
         const container = document.getElementById('champions-list');
         container.innerHTML = champions.map(c => UI.renderChampionCard(c)).join('');
