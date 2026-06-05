@@ -1,10 +1,13 @@
 const App = {
     currentTab: 'events',
     currentQueryTab: 'player',
+    allMatches: [],
+    allPlayers: [],
 
     async init() {
         this.bindEvents();
         await this.loadEventsData();
+        await this.loadAllData();
     },
 
     bindEvents() {
@@ -29,6 +32,10 @@ const App = {
         document.querySelectorAll('.tab-content').forEach(section => {
             section.classList.toggle('active', section.id === tabId);
         });
+
+        if (tabId === 'champions') {
+            this.loadChampionsData();
+        }
     },
 
     switchQueryTab(tabId) {
@@ -37,6 +44,22 @@ const App = {
             btn.classList.toggle('active', btn.dataset.query === tabId);
         });
         this.renderQueryForm();
+        if (tabId === 'event') {
+            document.getElementById('query-results').innerHTML = UI.renderMatchTable(this.allMatches, true);
+        } else {
+            document.getElementById('query-results').innerHTML = '';
+        }
+    },
+
+    async loadAllData() {
+        const matchesText = await DataLoader.loadCSV('matches.csv');
+        if (matchesText) {
+            this.allMatches = CSVParser.parse(matchesText);
+        }
+        const playersText = await DataLoader.loadCSV('players.csv');
+        if (playersText) {
+            this.allPlayers = CSVParser.parse(playersText);
+        }
     },
 
     async loadEventsData() {
@@ -48,6 +71,31 @@ const App = {
         }
     },
 
+    async loadChampionsData() {
+        const matchesText = await DataLoader.loadCSV('matches.csv');
+        if (!matchesText) return;
+
+        const matches = CSVParser.parse(matchesText);
+        const finals = matches.filter(m => m.比赛轮次 === '决赛');
+
+        const champions = [];
+        for (const m of finals) {
+            const scoreA = parseInt(m.选手A比分) || 0;
+            const scoreB = parseInt(m.选手B比分) || 0;
+            const winner = scoreA > scoreB ? m.选手A姓名 : m.选手B姓名;
+            champions.push({
+                选手姓名: winner,
+                期次: m.期次,
+                场次: m.场次,
+                比赛日期: m.比赛日期,
+                感言: ''
+            });
+        }
+
+        const container = document.getElementById('champions-list');
+        container.innerHTML = champions.map(c => UI.renderChampionCard(c)).join('');
+    },
+
     renderQueryForm() {
         const form = document.getElementById('query-form');
         if (this.currentQueryTab === 'player') {
@@ -57,8 +105,9 @@ const App = {
             `;
         } else {
             form.innerHTML = `
-                <input type="text" id="event-number" placeholder="输入期次">
-                <button onclick="App.searchEvent()">查询</button>
+                <input type="text" id="event-number" placeholder="输入期次筛选">
+                <button onclick="App.searchEvent()">筛选</button>
+                <button onclick="App.showAllEvents()">显示全部</button>
             `;
         }
     },
@@ -67,31 +116,24 @@ const App = {
         const name = document.getElementById('player-name').value.trim();
         if (!name) return alert('请输入选手姓名');
 
-        // Load and search from players data
-        const matchesText = await DataLoader.loadCSV('sample_matches.csv');
-        if (!matchesText) return alert('数据加载失败');
-
-        const matches = CSVParser.parse(matchesText);
-        const playerMatches = matches.filter(m =>
-            m.选手A姓名 === name || m.选手B姓名 === name
-        );
-
+        const player = this.allPlayers.find(p => p.选手姓名 === name);
         const results = document.getElementById('query-results');
-        results.innerHTML = UI.renderMatchTable(playerMatches);
+        results.innerHTML = UI.renderPlayerResult(player);
     },
 
     async searchEvent() {
         const eventNum = document.getElementById('event-number').value.trim();
         if (!eventNum) return alert('请输入期次');
 
-        const matchesText = await DataLoader.loadCSV('sample_matches.csv');
-        if (!matchesText) return alert('数据加载失败');
-
-        const matches = CSVParser.parse(matchesText);
-        const eventMatches = matches.filter(m => m.期次 === eventNum);
-
+        const eventMatches = this.allMatches.filter(m => m.期次 === eventNum);
         const results = document.getElementById('query-results');
-        results.innerHTML = UI.renderMatchTable(eventMatches);
+        results.innerHTML = UI.renderMatchTable(eventMatches, true);
+    },
+
+    showAllEvents() {
+        document.getElementById('event-number').value = '';
+        const results = document.getElementById('query-results');
+        results.innerHTML = UI.renderMatchTable(this.allMatches, true);
     }
 };
 

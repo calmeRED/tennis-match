@@ -17,23 +17,29 @@ const UI = {
     },
 
     renderChampionCard(champion) {
+        const imagePath = `champions/${champion.期次}-${champion.场次}.jpg`;
+        const txtPath = `champions/${champion.期次}-${champion.场次}.txt`;
         return `
             <div class="card champion-card">
+                <img src="${imagePath}" alt="第${champion.期次}期冠军" style="max-width:100%;border-radius:8px;" onerror="this.style.display='none'">
                 <h3>🏆 ${champion.选手姓名}</h3>
-                <p><strong>组别：</strong>${champion.组别}</p>
-                <p><strong>夺冠期次：</strong>${champion.期次}</p>
+                <p><strong>日期：</strong>${champion.比赛日期}</p>
+                ${champion.感言 ? `<p><strong>🏆 冠军说</strong><br>${champion.感言}</p>` : ''}
             </div>
         `;
     },
 
-    renderMatchTable(matches) {
+    renderMatchTable(matches, showPeriod = true) {
         if (!matches || matches.length === 0) {
             return '<p class="no-data">暂无数据</p>';
         }
+        const periodHeader = showPeriod ? '<th>期次</th>' : '';
+        const periodCell = showPeriod ? '<td>${m.期次}</td>' : '';
         let html = `
             <table class="data-table">
                 <thead>
                     <tr>
+                        ${periodHeader}
                         <th>场次</th>
                         <th>轮次</th>
                         <th>组别</th>
@@ -48,6 +54,7 @@ const UI = {
         matches.forEach(m => {
             html += `
                 <tr>
+                    ${periodCell.replace(/\${m\.期次}/g, m.期次)}
                     <td>${m.场次}</td>
                     <td>${m.比赛轮次}</td>
                     <td>${m.组别}</td>
@@ -62,16 +69,18 @@ const UI = {
         return html;
     },
 
-    renderPlayerCard(player) {
+    renderPlayerResult(player) {
+        if (!player) {
+            return '<p class="no-data">未找到该选手</p>';
+        }
         return `
             <div class="card player-card">
                 <h3>${player.选手姓名}</h3>
-                <p><strong>性别：</strong>${player.性别 || '未知'}</p>
                 <p><strong>胜率：</strong>${player.胜率}%</p>
                 <p><strong>冠军数：</strong>${player.冠军数}</p>
                 <p><strong>亚军数：</strong>${player.亚军数}</p>
                 <p><strong>参赛期数：</strong>${player.参赛期数}</p>
-                <p><strong>最近参赛：</strong>${player.最近参赛}</p>
+                <p><strong>最近参赛日期：</strong>${player.最近参赛}</p>
             </div>
         `;
     }
