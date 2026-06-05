@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -31,8 +33,13 @@ jobs:
 
       - name: Commit and push changes
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "GitHub Actions Bot"
-          git add data/players.csv
-          git diff --quiet || git commit -m "自动更新 players.csv"
-          git push
+          if [ -f data/players.csv ]; then
+            git config --local user.email "github-actions[bot]@users.noreply.github.com"
+            git config --local user.name "GitHub Actions Bot"
+            git add data/players.csv
+            git status
+            git commit -m "自动更新 players.csv" || echo "Nothing to commit"
+            git push || echo "Push failed, but continuing"
+          else
+            echo "players.csv not found, skipping commit"
+          fi
