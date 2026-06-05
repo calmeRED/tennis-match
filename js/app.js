@@ -83,12 +83,23 @@ const App = {
             const scoreA = parseInt(m.选手A比分) || 0;
             const scoreB = parseInt(m.选手B比分) || 0;
             const winner = scoreA > scoreB ? m.选手A姓名 : m.选手B姓名;
+            const txtPath = `champions/${m.期次}-${m.场次}.txt`;
+            let 感言 = '';
+            try {
+                const response = await fetch(txtPath);
+                if (response.ok) {
+                    感言 = await response.text();
+                }
+            } catch (e) {
+                // txt file not found, ignore
+            }
             champions.push({
                 选手姓名: winner,
                 期次: m.期次,
                 场次: m.场次,
+                组别: m.组别,
                 比赛日期: m.比赛日期,
-                感言: ''
+                感言: 感言
             });
         }
 
