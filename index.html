@@ -10,23 +10,23 @@
     <header class="header">
         <h1>🎾 迪迪网球系列赛</h1>
         <nav class="nav">
-            <button class="nav-btn active" data-tab="events">赛事预告与报名</button>
-            <button class="nav-btn" data-tab="champions">冠军墙</button>
+            <button class="nav-btn active" data-tab="champions">冠军墙</button>
+            <button class="nav-btn" data-tab="events">赛事预告与报名</button>
             <button class="nav-btn" data-tab="query">数据查询</button>
         </nav>
     </header>
 
     <main class="main">
-        <!-- 赛事预告与报名 -->
-        <section id="events" class="tab-content active">
-            <h2>赛事预告与报名</h2>
-            <div id="events-list" class="card-list"></div>
-        </section>
-
         <!-- 冠军墙 -->
-        <section id="champions" class="tab-content">
+        <section id="champions" class="tab-content active">
             <h2>冠军墙</h2>
             <div id="champions-list" class="card-list"></div>
+        </section>
+
+        <!-- 赛事预告与报名 -->
+        <section id="events" class="tab-content">
+            <h2>赛事预告与报名</h2>
+            <div id="events-list" class="card-list"></div>
         </section>
 
         <!-- 数据查询 -->

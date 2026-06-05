@@ -1,13 +1,13 @@
 const App = {
-    currentTab: 'events',
+    currentTab: 'champions',
     currentQueryTab: 'player',
     allMatches: [],
     allPlayers: [],
 
     async init() {
         this.bindEvents();
-        await this.loadEventsData();
         await this.loadAllData();
+        await this.loadChampionsData();
     },
 
     bindEvents() {
@@ -32,10 +32,6 @@ const App = {
         document.querySelectorAll('.tab-content').forEach(section => {
             section.classList.toggle('active', section.id === tabId);
         });
-
-        if (tabId === 'champions') {
-            this.loadChampionsData();
-        }
     },
 
     switchQueryTab(tabId) {
