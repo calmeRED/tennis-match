@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>青北网球联盟</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="header">
+        <h1>🎾 青北网球联盟</h1>
+        <nav class="nav">
+            <button class="nav-btn active" data-tab="events">赛事预告与报名</button>
+            <button class="nav-btn" data-tab="champions">冠军墙</button>
+            <button class="nav-btn" data-tab="query">数据查询</button>
+        </nav>
+    </header>
+
+    <main class="main">
+        <!-- 赛事预告与报名 -->
+        <section id="events" class="tab-content active">
+            <h2>赛事预告与报名</h2>
+            <div id="events-list" class="card-list"></div>
+        </section>
+
+        <!-- 冠军墙 -->
+        <section id="champions" class="tab-content">
+            <h2>冠军墙</h2>
+            <div id="champions-list" class="card-list"></div>
+        </section>
+
+        <!-- 数据查询 -->
+        <section id="query" class="tab-content">
+            <h2>数据查询</h2>
+            <div class="query-tabs">
+                <button class="query-tab active" data-query="player">选手查询</button>
+                <button class="query-tab" data-query="event">单期查询</button>
+            </div>
+            <div id="query-form" class="query-form"></div>
+            <div id="query-results" class="results"></div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>© 2024 青北网球联盟 | GitHub Pages 托管</p>
+    </footer>
+
+    <script src="js/data_loader.js"></script>
+    <script src="js/csv_parser.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

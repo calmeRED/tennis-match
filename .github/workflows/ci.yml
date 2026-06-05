@@ -1,0 +1,33 @@
+name: CSV Data Processing
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'data/matches.csv'
+      - 'scripts/csv_processor.py'
+
+jobs:
+  process:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Process CSV data
+        run: python scripts/csv_processor.py data/matches.csv data/players.csv
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "GitHub Actions Bot"
+          git add data/players.csv
+          git diff --quiet || git commit -m "自动更新 players.csv"
+          git push
