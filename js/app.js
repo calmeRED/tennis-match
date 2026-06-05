@@ -32,6 +32,10 @@ const App = {
         document.querySelectorAll('.tab-content').forEach(section => {
             section.classList.toggle('active', section.id === tabId);
         });
+
+        if (tabId === 'events') {
+            this.loadEventsData();
+        }
     },
 
     switchQueryTab(tabId) {
