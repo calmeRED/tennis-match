@@ -19,9 +19,11 @@ const UI = {
     renderChampionCard(champion) {
         const period = champion.期次;
         const match = champion.场次;
+        const base = window.location.origin + window.location.pathname.replace(/[^/]*$/, '');
+        const ts = Date.now();
         return `
             <div class="card champion-card">
-                <img src="champions/${period}-${match}.jpg" alt="第${period}期冠军" style="max-width:100%;border-radius:8px;" onerror="this.onerror=null;this.src='champions/${period}-${match}.png'">
+                <img src="${base}champions/${period}-${match}.jpg?v=${ts}" alt="第${period}期冠军" style="max-width:100%;border-radius:8px;" onerror="this.onerror=null;this.src='${base}champions/${period}-${match}.png?v=${ts}'">
                 <h3>🏆 ${champion.选手姓名}</h3>
                 <p>第${period}期 ${champion.组别} ${champion.比赛日期}</p>
                 ${champion.感言 ? `<p><strong>《冠军说》🏆</strong><br>${champion.感言}</p>` : ''}

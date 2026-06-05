@@ -71,19 +71,24 @@ const App = {
         }
     },
 
+    getBasePath() {
+        return window.location.origin + window.location.pathname.replace(/[^/]*$/, '');
+    },
+
     async loadChampionsData() {
         const matchesText = await DataLoader.loadCSV('matches.csv');
         if (!matchesText) return;
 
         const matches = CSVParser.parse(matchesText);
         const finals = matches.filter(m => m.比赛轮次 === '决赛');
+        const base = this.getBasePath();
 
         const champions = [];
         for (const m of finals) {
             const scoreA = parseInt(m.选手A比分) || 0;
             const scoreB = parseInt(m.选手B比分) || 0;
             const winner = scoreA > scoreB ? m.选手A姓名 : m.选手B姓名;
-            const txtPath = `champions/${m.期次}-${m.场次}.txt`;
+            const txtPath = `${base}champions/${m.期次}-${m.场次}.txt`;
             let 感言 = '';
             try {
                 const response = await fetch(txtPath);
