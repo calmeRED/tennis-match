@@ -127,7 +127,60 @@ const App = {
         const name = document.getElementById('player-name').value.trim();
         if (!name) return alert('请输入选手姓名');
 
-        const player = this.allPlayers.find(p => p.选手姓名 === name);
+        // 直接从 matches.csv 计算选手数据
+        const playerMatches = this.allMatches.filter(m =>
+            m.选手A姓名 === name || m.选手B姓名 === name
+        );
+
+        if (playerMatches.length === 0) {
+            document.getElementById('query-results').innerHTML = '<p class="no-data">未找到该选手</p>';
+            return;
+        }
+
+        let wins = 0, losses = 0, champions = 0, runnersUp = 0;
+        const events = new Set();
+        let lastDate = '';
+
+        playerMatches.forEach(m => {
+            events.add(m.期次);
+            const scoreA = parseInt(m.选手A比分) || 0;
+            const scoreB = parseInt(m.选手B比分) || 0;
+            const isPlayerA = m.选手A姓名 === name;
+
+            if (m.比赛轮次 === '决赛') {
+                const winner = scoreA > scoreB ? m.选手A姓名 : m.选手B姓名;
+                if (winner === name) {
+                    champions++;
+                } else {
+                    runnersUp++;
+                }
+            }
+
+            if (isPlayerA) {
+                if (scoreA > scoreB) wins++;
+                else losses++;
+            } else {
+                if (scoreB > scoreA) wins++;
+                else losses++;
+            }
+
+            if (!lastDate || m.比赛日期 > lastDate) {
+                lastDate = m.比赛日期;
+            }
+        });
+
+        const total = wins + losses;
+        const winRate = total > 0 ? Math.round(wins / total * 100, 1) : 0;
+
+        const player = {
+            选手姓名: name,
+            胜率: winRate,
+            冠军数: champions,
+            亚军数: runnersUp,
+            参赛期数: events.size,
+            最近参赛: lastDate
+        };
+
         const results = document.getElementById('query-results');
         results.innerHTML = UI.renderPlayerResult(player);
     },
