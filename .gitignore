@@ -1,0 +1,11 @@
+# Claude Code
+.claude/
+
+# GitHub
+.github/
+
+# Superpowers (brainstorm session files)
+.superpowers/
+
+# Project config
+CLAUDE.md
