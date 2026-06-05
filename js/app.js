@@ -65,7 +65,7 @@ const App = {
     startCountdowns() {
         document.querySelectorAll('.countdown-timer').forEach(el => {
             const dateStr = el.dataset.date;
-            const targetDate = new Date(dateStr + 'T9:00:00');
+            const targetDate = new Date(dateStr + 'T09:00:00');
 
             const update = () => {
                 const now = new Date();
