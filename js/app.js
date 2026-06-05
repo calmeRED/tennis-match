@@ -72,7 +72,9 @@ const App = {
                 const diff = targetDate - now;
 
                 if (diff <= 0) {
-                    el.textContent = '比赛已开始！';
+                    el.textContent = '比赛已结束';
+                    el.style.color = '#999';
+                    el.style.fontSize = '1rem';
                     return;
                 }
 
